@@ -1,17 +1,22 @@
-# Imports
 import numpy as np
 
-def makeDictionary():
-	''' Make a dictionnary. Each word is associated with a vector
+def makeDictionary(vector_filepath, word_filepath):
+	''' Each word is associated with his vector representation
 	'''
 	# Load all the vect
-	embedding = np.load("models/noel_embeddings.npy")
+	embedding = np.load(vector_filepath)
 	# print(embedding.shape)
 
 	# Load the corresponding words
-	with open("models/wiki_vocab.txt","r") as f:
-		vocab = f.read().splitlines()
+	with open(word_filepath,"r") as file:
+		vocab = file.read().splitlines()
 
 	# Create the dictionary
-	embedding_dic = {word: embedding[i] for i, word in enumerate(vocab)}
-	return embedding_dic
+	embedding_dict = {word: embedding[i] for i, word in enumerate(vocab)}
+	return embedding_dict
+
+
+if __name__ == '__main__':
+	vector_filepath = "models/noel_embeddings.npy"
+	word_filepath = "models/wiki_vocab.txt"
+	embedding_dict = makeDictionary(vector_filepath, word_filepath)
