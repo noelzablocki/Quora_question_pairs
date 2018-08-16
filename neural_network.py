@@ -1,16 +1,14 @@
-# CREATE AND TRAIN THE NEURAL NETWORK
-
-
-# Imports
-from mesures import *
 import csv
 import keras
 import h5py
+import numpy as np
+
 from sklearn.cross_validation import StratifiedKFold
 from keras.models import Sequential
 from keras.layers import Dense, Dropout
 from keras.callbacks import EarlyStopping, ModelCheckpoint
-import numpy as np
+
+from mesures import precision, recall
 
 def load_data(data_filepath, labels_filepath):
 	'''Load the data from .csv files
@@ -31,13 +29,12 @@ def create_model():
 	model.add(Dense(1, activation='sigmoid'))
 	return model
 
-def train_and_evaluate_model(model, data_train, labels_train, data_test, labels_test,):
+def train_and_evaluate_model(model, data_train, labels_train, data_test, labels_test, store_model_filepath):
 	'''Train and evaluate the model
 	'''
-
-	filepath="weights.best.hdf5"
-	
-	checkpoint = ModelCheckpoint(filepath, monitor='val_acc', verbose=1, save_best_only=True, mode='max')
+	# Store intermediate model
+	checkpoint = ModelCheckpoint(store_model_filepath, monitor='val_acc',
+				     verbose=1, save_best_only=True, mode='max')
 	# Early Stopping
 	early_stop=keras.callbacks.EarlyStopping(monitor='val_acc', patience=2, verbose=0, mode='auto')	
 	callbacks_list = [checkpoint, early_stop]
@@ -46,7 +43,6 @@ def train_and_evaluate_model(model, data_train, labels_train, data_test, labels_
 		  validation_data=(data_test, labels_test), callbacks=callbacks_list)
 	# Test the model
 	score = model.evaluate(data_test , labels_test, batch_size =5)
-	
 	return score
 
 def load_trained_model(weights_path):
