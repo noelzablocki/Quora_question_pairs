@@ -4,8 +4,10 @@ from nltk.tokenize import RegexpTokenizer
 from nltk.corpus import stopwords
 import re
 
-# Remove all stopwords not nessary
+
 def preprocess(sentence):
+	'''Remove stopwords : 'the', 'a', ...
+	'''
 	sentence = sentence.lower()
 	tokenizer = RegexpTokenizer(r'\w+')
 	tokens = tokenizer.tokenize(sentence)
